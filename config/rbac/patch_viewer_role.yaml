@@ -1,0 +1,20 @@
+# permissions for end users to view patches.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: patch-viewer-role
+rules:
+- apiGroups:
+  - patch.hbchen.com
+  resources:
+  - patches
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - patch.hbchen.com
+  resources:
+  - patches/status
+  verbs:
+  - get

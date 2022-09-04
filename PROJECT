@@ -3,4 +3,14 @@ layout:
 - go.kubebuilder.io/v4-alpha
 projectName: patch
 repo: github.com/hb-chen/patch
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: hbchen.com
+  group: patch
+  kind: Patch
+  path: github.com/hb-chen/patch/api/v1alpha1
+  version: v1alpha1
 version: "3"

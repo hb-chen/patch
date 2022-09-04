@@ -1,0 +1,33 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - patch.hbchen.com
+  resources:
+  - patches
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - patch.hbchen.com
+  resources:
+  - patches/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - patch.hbchen.com
+  resources:
+  - patches/status
+  verbs:
+  - get
+  - patch
+  - update
