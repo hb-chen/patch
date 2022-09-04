@@ -1,0 +1,6 @@
+domain: hbchen.com
+layout:
+- go.kubebuilder.io/v4-alpha
+projectName: patch
+repo: github.com/hb-chen/patch
+version: "3"
