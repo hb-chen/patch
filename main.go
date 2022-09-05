@@ -20,10 +20,13 @@ import (
 	"flag"
 	"os"
 
+	apiextension "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
+	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
+	"github.com/redhat-cop/operator-utils/pkg/util/lockedresourcecontroller"
 	"k8s.io/apimachinery/pkg/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -33,7 +36,7 @@ import (
 
 	patchv1alpha1 "github.com/hb-chen/patch/api/v1alpha1"
 	"github.com/hb-chen/patch/controllers"
-	//+kubebuilder:scaffold:imports
+	// +kubebuilder:scaffold:imports
 )
 
 var (
@@ -45,7 +48,9 @@ func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
 	utilruntime.Must(patchv1alpha1.AddToScheme(scheme))
-	//+kubebuilder:scaffold:scheme
+	// +kubebuilder:scaffold:scheme
+
+	utilruntime.Must(apiextension.AddToScheme(scheme))
 }
 
 func main() {
@@ -90,13 +95,28 @@ func main() {
 	}
 
 	if err = (&controllers.PatchReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
+		EnforcingReconciler: lockedresourcecontroller.NewFromManager(mgr, "patch_controller", true, true),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Patch")
 		os.Exit(1)
 	}
-	//+kubebuilder:scaffold:builder
+	if err = (&patchv1alpha1.Patch{}).SetupWebhookWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create webhook", "webhook", "Patch")
+		os.Exit(1)
+	}
+	// +kubebuilder:scaffold:builder
+
+	crr := controllers.NewCustomResourceDefinitionReconciler(mgr.GetConfig())
+	if err = crr.SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "CustomResourceDefinition")
+		os.Exit(1)
+	}
+
+	mgr.GetWebhookServer().Register("/inject",
+		&webhook.Admission{
+			Handler: controllers.NewPatchInjector(mgr.GetClient(), mgr.GetConfig(), crr),
+		},
+	)
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
 		setupLog.Error(err, "unable to set up health check")

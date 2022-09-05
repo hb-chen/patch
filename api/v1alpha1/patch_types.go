@@ -17,8 +17,12 @@ limitations under the License.
 package v1alpha1
 
 import (
+	utilsv1alpha1 "github.com/redhat-cop/operator-utils/api/v1alpha1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
+
+const PatchControllerFinalizerName = "patch-controller"
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
@@ -28,18 +32,34 @@ type PatchSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of Patch. Edit patch_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// Patches is a list of patches that should be enforced at runtime.
+	// +kubebuilder:validation:Required
+	Patches map[string]utilsv1alpha1.PatchSpec `json:"patches,omitempty"`
+
+	// ServiceAccountRef is the service account to be used to run the controllers associated with this configuration
+	// +kubebuilder:validation:Required
+	// +kubebuilder:default={"name": "default"}
+	ServiceAccountRef corev1.LocalObjectReference `json:"serviceAccountRef,omitempty"`
 }
 
 // PatchStatus defines the observed state of Patch
 type PatchStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+
+	// ReconcileStatus this is the general status of the main reconciler
+	// +kubebuilder:validation:Optional
+	// +listType=map
+	// +listMapKey=type
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+
+	// PatchStatuses contains the reconcile status for each of the managed patch
+	// +kubebuilder:validation:Optional
+	PatchStatuses map[string]utilsv1alpha1.ConditionMap `json:"patchStatuses,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 
 // Patch is the Schema for the patches API
 type Patch struct {
@@ -50,7 +70,7 @@ type Patch struct {
 	Status PatchStatus `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // PatchList contains a list of Patch
 type PatchList struct {

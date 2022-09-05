@@ -13,4 +13,9 @@ resources:
   kind: Patch
   path: github.com/hb-chen/patch/api/v1alpha1
   version: v1alpha1
+  webhooks:
+    conversion: true
+    defaulting: true
+    validation: true
+    webhookVersion: v1
 version: "3"
