@@ -15,7 +15,8 @@ spec:
           capabilities:
             drop:
               - "ALL"
-        image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.0
+        #image: gcr.io/kubebuilder/kube-rbac-proxy:v0.13.0
+        image: registry.cn-hangzhou.aliyuncs.com/hb-chen/kubebuilder-kube-rbac-proxy:v0.13.0@sha256:a2523c532c0c3d51a5396a901d7ded23e402a9a1492c783aae27af6d0c1d2ec5
         args:
         - "--secure-listen-address=0.0.0.0:8443"
         - "--upstream=http://127.0.0.1:8080/"
@@ -37,3 +38,4 @@ spec:
         - "--health-probe-bind-address=:8081"
         - "--metrics-bind-address=127.0.0.1:8080"
         - "--leader-elect"
+        - "--zap-devel=true"

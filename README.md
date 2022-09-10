@@ -22,3 +22,18 @@ make install
 
 make run
 ```
+
+## Run It On the Cluster
+```shell
+make docker-build docker-push IMG=registry.cn-hangzhou.aliyuncs.com/hb-chen/patch-operator:latest
+```
+
+```shell
+make deploy IMG=registry.cn-hangzhou.aliyuncs.com/hb-chen/patch-operator:latest
+```
+
+## cert-manager
+
+```shell
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.yaml
+```
