@@ -1,4 +1,4 @@
-# patch
+# Patch Operator
 
 Kubernetes patch operator, fork from [redhat-cop/patch-operator](https://github.com/redhat-cop/patch-operator).
 
