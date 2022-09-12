@@ -3,7 +3,6 @@ kind: Patch
 metadata:
   name: patch-sample
 spec:
-  # TODO(user): Add fields here
   serviceAccountRef:
     name: patch-controller-manager
   patches:
@@ -11,12 +10,14 @@ spec:
       targetObjectRef:
         apiVersion: v1
         kind: ServiceAccount
-        name: default
+        name: patch-controller-manager
         namespace: patch-system
       patchTemplate: |
         metadata:
           annotations:
-            {{ (index . 1).metadata.name }}: {{ (index . 2).metadata.name }}
+            source-object-name-0: {{ (index . 0).metadata.name }}
+            source-object-name-1: {{ (index . 1).metadata.name }}
+            source-object-name-2: {{ (index . 2).metadata.name }}
       patchType: application/merge-patch+json
       sourceObjectRefs:
         - apiVersion: v1

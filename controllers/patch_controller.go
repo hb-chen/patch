@@ -52,7 +52,7 @@ type PatchReconciler struct {
 // +kubebuilder:rbac:groups="",resources=users;groups;serviceaccounts,verbs=impersonate
 // +kubebuilder:rbac:groups="authentication.k8s.io",resources=*,verbs=impersonate
 
-// for sample test
+// TODO rbac for test samples
 // +kubebuilder:rbac:groups="*",resources=serviceaccounts,verbs=patch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
