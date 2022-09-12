@@ -44,6 +44,16 @@ type PatchReconciler struct {
 // +kubebuilder:rbac:groups=patch.hbchen.com,resources=patches,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=patch.hbchen.com,resources=patches/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups=patch.hbchen.com,resources=patches/finalizers,verbs=update
+// +kubebuilder:rbac:groups="",resources=events,verbs=get;list;watch;create;patch
+// +kubebuilder:rbac:groups="",resources=serviceaccounts/token,verbs=create
+
+// needed by the patch webhook
+// +kubebuilder:rbac:groups="*",resources="*",verbs=get;list;watch
+// +kubebuilder:rbac:groups="",resources=users;groups;serviceaccounts,verbs=impersonate
+// +kubebuilder:rbac:groups="authentication.k8s.io",resources=*,verbs=impersonate
+
+// for sample test
+// +kubebuilder:rbac:groups="*",resources=serviceaccounts,verbs=patch
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
