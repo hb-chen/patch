@@ -1,0 +1,4 @@
+resources:
+- 01_webhook_inject.yaml
+- 02_patch_rbac.yaml
+- 03_patch_v1alpha1_patch.yaml

@@ -23,12 +23,12 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
-const patchKey string = "redhat-cop.redhat.io/patch"
+const patchKey string = "patch.hbchen.com/patch"
 
 type PatchType string
 
 // allowed values one of "application/json-patch+json"'"application/merge-patch+json","application/strategic-merge-patch+json".  Default "application/strategic-merge-patch+json"
-const patchTypeAnnotation string = "redhat-cop.redhat.io/patch-type"
+const patchTypeAnnotation string = "patch.hbchen.com/patch-type"
 
 const (
 	jsonPatch           PatchType = "application/json-patch+json"

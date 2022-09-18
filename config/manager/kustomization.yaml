@@ -11,6 +11,6 @@ configMapGenerator:
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
-- digest: sha256:bcf792d990c03dbaed1a3b34278561ada2717bc4a94ea6e2a3716ec36356c239
+- digest: sha256:3ff7d9b62b6f8a9a9ef12ce49ebbb2050236bd71d214f7efc8d33ae6eb9d44c0
   name: controller
   newName: registry.cn-hangzhou.aliyuncs.com/hb-chen/patch-operator:latest

@@ -1,0 +1,37 @@
+---
+apiVersion: patch.hbchen.com/v1alpha1
+kind: Patch
+metadata:
+  name: patch-sample
+  namespace: patch-system
+  annotations:
+    "patch.hbchen.com/patch-type": application/merge-patch+json
+    "patch.hbchen.com/patch": |
+      metadata:
+        annotations:
+          webhook-server-cert-uid: "{{ (lookup "v1" "Secret" "patch-system" "webhook-server-cert").metadata.uid }}"
+spec:
+  serviceAccountRef:
+    name: mutatingwebhook-patcher
+  patches:
+    test-complex-patch:
+      targetObjectRef:
+        apiVersion: v1
+        kind: ServiceAccount
+        name: default
+        namespace: patch-system
+      patchTemplate: |
+        metadata:
+          annotations:
+            source-object-name-0: {{ (index . 0).kind }}-{{ (index . 0).metadata.name }}
+            source-object-name-1: {{ (index . 1).kind }}-{{ (index . 1).metadata.name }}
+            source-object-name-2: {{ (index . 2).kind }}-{{ (index . 2).metadata.name }}
+      patchType: application/merge-patch+json
+      sourceObjectRefs:
+        - apiVersion: v1
+          kind: Namespace
+          name: patch-system
+        - apiVersion: v1
+          kind: ServiceAccount
+          name: patch-controller-manager
+          namespace: patch-system

@@ -1,0 +1,27 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  annotations:
+    cert-manager.io/inject-ca-from: patch-system/patch-serving-cert
+  name: patch-inject-webhook-configuration
+webhooks:
+  - admissionReviewVersions:
+      - v1
+    clientConfig:
+      service:
+        name: patch-webhook-service
+        namespace: patch-system
+        path: /inject
+    failurePolicy: Fail
+    name: patch-operator-inject.hbchen.com
+    rules:
+      - apiGroups:
+          - "patch.hbchen.com"
+        apiVersions:
+          - v1alpha1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - patches
+    sideEffects: None

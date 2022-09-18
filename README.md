@@ -13,13 +13,16 @@ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/
 ### patch-operator
 
 ```shell
-make deploy IMG=registry.cn-hangzhou.aliyuncs.com/hb-chen/patch-operator:latest@sha256:bcf792d990c03dbaed1a3b34278561ada2717bc4a94ea6e2a3716ec36356c239
+make deploy IMG=registry.cn-hangzhou.aliyuncs.com/hb-chen/patch-operator:latest@sha256:3ff7d9b62b6f8a9a9ef12ce49ebbb2050236bd71d214f7efc8d33ae6eb9d44c0
 ```
 
 ### samples
 
 ```shell
-kubectl apply -f config/samples/patch_v1alpha1_patch.yaml -n patch-system
+# apply inject webhook
+kubectl apply -n patch-system -f config/samples/01_webhook_inject.yaml
+
+kubectl apply -n patch-system -k config/samples
 ```
 
 ```shell
